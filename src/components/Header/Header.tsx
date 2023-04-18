@@ -1,12 +1,13 @@
 import { FC } from 'react';
-import { Button } from 'antd';
 import { Link } from 'react-router-dom';
 
-import styles from './Header.module.scss';
+import { Button } from '../Button';
 import { ROUTES } from '../../constants';
 
-type Props = { hasSignedIn: boolean };
-export const Header: FC<Props> = ({ hasSignedIn }) => {
+import styles from './Header.module.scss';
+
+type Props = { hasSignedIn?: boolean };
+export const Header: FC<Props> = ({ hasSignedIn = false }) => {
   return (
     <ul className={styles.container}>
       <li className={styles.item}>
@@ -23,9 +24,7 @@ export const Header: FC<Props> = ({ hasSignedIn }) => {
       )}
       {hasSignedIn ? (
         <li className={styles.item}>
-          <Button>
-            <Button>Sign out</Button>
-          </Button>
+          <Button>Sign out</Button>
         </li>
       ) : (
         <li className={styles.item}>
