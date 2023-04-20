@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Image, Row, Col } from 'antd';
 import Title from 'antd/es/typography/Title';
 
@@ -11,23 +11,24 @@ import { Endpoints } from '../../constants';
 import { UserProfileDto } from '../../types';
 
 import { useFirstName } from '../../hooks/useFirstName';
-import { QuoteAction, QuoteContext } from '../../store';
+import { QuoteAction, QuoteContext, UserAction, UserContext } from '../../store';
 import { RequestQuoteModal } from './components/RequestQuoteModal';
 
 import styles from './Profile.module.scss';
 
 export const Profile = () => {
-  const {
-    state: { author, quote },
-    dispatch,
-  } = useContext(QuoteContext);
-
-  const { data: userProfileData, isLoading } = useAxios<UserProfileDto>({
+  const { dispatch: userDispatch } = useContext(UserContext);
+  const { data: userProfile, isLoading } = useAxios<UserProfileDto>({
     method: 'GET',
     url: Endpoints.profile,
   });
 
-  const firstName = useFirstName(userProfileData?.fullname);
+  const {
+    state: { author, quote },
+    dispatch: quoteDispatch,
+  } = useContext(QuoteContext);
+
+  const firstName = useFirstName(userProfile?.fullname);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -35,7 +36,7 @@ export const Profile = () => {
 
   const onModalVisibilityChange = () => {
     if (!isModalOpen) {
-      dispatch({ type: QuoteAction.reset });
+      quoteDispatch({ type: QuoteAction.reset });
     }
     setIsModalOpen(prevState => !prevState);
   };
@@ -43,6 +44,15 @@ export const Profile = () => {
   const onUpdateClick = async () => {
     onModalVisibilityChange();
   };
+
+  useEffect(() => {
+    if (userProfile) {
+      userDispatch({
+        type: UserAction.setUser,
+        payload: { isAuthenticated: true, user: userProfile },
+      });
+    }
+  }, [userProfile]);
 
   return (
     <Layout>

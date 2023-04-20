@@ -23,7 +23,7 @@ export const SignIn = () => {
     const response = await fetchData({ url: Endpoints.signIn, method: 'POST', data: loginDto });
 
     if (response?.data?.token) {
-      dispatch({ type: UserAction.signIn, payload: { isAuthenticated: true } });
+      dispatch({ type: UserAction.signIn });
       navigate(Routes.profile);
     }
   };
