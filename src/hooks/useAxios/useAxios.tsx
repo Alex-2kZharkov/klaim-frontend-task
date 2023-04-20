@@ -1,8 +1,11 @@
 import axios, { AxiosRequestConfig } from 'axios';
-
-import { useEffect, useState } from 'react';
-import { ResponseDto, Response, Optional } from '../../types';
+import { useContext, useEffect, useState } from 'react';
 import { message } from 'antd';
+import { useNavigate } from 'react-router-dom';
+
+import { ResponseDto, Response, Optional } from '../../types';
+import { Routes } from '../../constants';
+import { UserAction, UserContext } from '../../store';
 
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_HOST;
 axios.defaults.withCredentials = true; // to send httpOnly cookies automatically
@@ -11,25 +14,42 @@ export const useAxios = <T extends ResponseDto>({
   url,
   method,
   data,
-  cancelToken,
+  signal,
+  params,
 }: AxiosRequestConfig) => {
   const [response, setResponse] = useState({} as any); // TODO fix any
-  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+
+  const navigate = useNavigate();
+  const { dispatch } = useContext(UserContext);
 
   const fetchData = async ({
     url,
     method,
     data,
-    cancelToken,
+    signal,
+    params,
   }: AxiosRequestConfig): Promise<Optional<Response<T>>> => {
     try {
-      const response = await axios.request<Response<T>>({ url, method, data, cancelToken });
+      setIsLoading(true);
+      const response = await axios.request<Response<T>>({
+        url,
+        method,
+        data,
+        signal,
+        params,
+      });
       setResponse(response.data);
       return response.data;
     } catch (error: any) {
-      setError(error?.message ?? `Error while fetching ${url}`);
-      message.error(error?.response?.data?.data?.message);
+      if (error?.response?.status === 403) {
+        dispatch({ type: UserAction.signOut, payload: { isAuthenticated: false } });
+        navigate(Routes.signIn);
+      } else {
+        message.error(
+          error?.message ?? error?.response?.data?.data?.message ?? `Error while fetching ${url}`,
+        );
+      }
     } finally {
       setIsLoading(false);
     }
@@ -41,10 +61,11 @@ export const useAxios = <T extends ResponseDto>({
         url,
         method,
         data,
-        cancelToken,
+        signal,
+        params,
       });
     }
   }, []);
 
-  return { data: response.data, error, isLoading, fetchData };
+  return { data: response.data, isLoading, fetchData };
 };
