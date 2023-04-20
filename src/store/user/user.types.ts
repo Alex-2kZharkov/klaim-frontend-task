@@ -8,6 +8,7 @@ export type UserState = {
 
 export type UserActionTypes = {
   type: (typeof UserAction)[keyof typeof UserAction];
+  payload?: UserState;
 };
 
 export type UserContextType = {

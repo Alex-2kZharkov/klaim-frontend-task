@@ -20,7 +20,7 @@ export const Header = () => {
 
   const onSignOut = async () => {
     await fetchData({ url: Endpoints.signOut, method: 'DELETE' });
-    dispatch({ type: UserAction.signOut });
+    dispatch({ type: UserAction.signOut, payload: { isAuthenticated: false } });
     navigate(Routes.signIn);
   };
 

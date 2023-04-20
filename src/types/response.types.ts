@@ -3,7 +3,7 @@ import {
   CompanyDto,
   LoginDto,
   QuoteDto,
-  RegisterUserDto,
+  UserProfileDto,
   TokenDto,
 } from './entity.types';
 
@@ -20,7 +20,7 @@ export type ResponseDto =
   | CompanyDto
   | TokenDto
   | LoginDto
-  | RegisterUserDto
+  | UserProfileDto
   | AuthorDto
   | QuoteDto
   | ErrorDto;

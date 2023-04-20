@@ -12,6 +12,7 @@ export const useAxios = <T extends ResponseDto>({
   method,
   data,
   cancelToken,
+  params,
 }: AxiosRequestConfig) => {
   const [response, setResponse] = useState({} as any); // TODO fix any
   const [error, setError] = useState('');
@@ -22,9 +23,11 @@ export const useAxios = <T extends ResponseDto>({
     method,
     data,
     cancelToken,
+    params,
   }: AxiosRequestConfig): Promise<Optional<Response<T>>> => {
     try {
-      const response = await axios.request<Response<T>>({ url, method, data, cancelToken });
+      setIsLoading(true);
+      const response = await axios.request<Response<T>>({ url, method, data, cancelToken, params });
       setResponse(response.data);
       return response.data;
     } catch (error: any) {
@@ -42,6 +45,7 @@ export const useAxios = <T extends ResponseDto>({
         method,
         data,
         cancelToken,
+        params,
       });
     }
   }, []);
