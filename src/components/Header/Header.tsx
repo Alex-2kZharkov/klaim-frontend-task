@@ -4,9 +4,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../Button';
 import { Endpoints, Routes } from '../../constants';
 
-import styles from './Header.module.scss';
 import { UserAction, UserContext } from '../../store';
 import { useAxios } from '../../hooks/useAxios';
+
+import styles from './Header.module.scss';
 
 export const Header = () => {
   const {
