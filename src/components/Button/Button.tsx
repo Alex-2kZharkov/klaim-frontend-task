@@ -8,12 +8,24 @@ type Props = {
   className?: string;
   htmlType?: ButtonHTMLType;
   type?: ButtonType;
+  onClick?: () => void;
   children: string;
 };
 
-export const Button = ({ className, type = 'default', htmlType = 'button', children }: Props) => {
+export const Button = ({
+  className,
+  type = 'default',
+  htmlType = 'button',
+  onClick,
+  children,
+}: Props) => {
   return (
-    <AntdButton className={clsx(styles.button, className)} type={type} htmlType={htmlType}>
+    <AntdButton
+      className={clsx(styles.button, className)}
+      type={type}
+      htmlType={htmlType}
+      onClick={onClick}
+    >
       {children}
     </AntdButton>
   );

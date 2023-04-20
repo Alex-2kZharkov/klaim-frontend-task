@@ -5,6 +5,7 @@ import { ResponseDto, Response, Optional } from '../../types';
 import { message } from 'antd';
 
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_HOST;
+axios.defaults.withCredentials = true; // to send httpOnly cookies automatically
 
 export const useAxios = <T extends ResponseDto>({
   url,

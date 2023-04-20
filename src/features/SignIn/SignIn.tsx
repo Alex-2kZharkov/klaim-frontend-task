@@ -30,7 +30,7 @@ export const SignIn = () => {
 
   return (
     <Layout>
-      <Header hasSignedIn />
+      <Header />
       <Form
         className={styles.form}
         name="login-form"

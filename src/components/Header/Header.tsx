@@ -1,13 +1,28 @@
-import { FC } from 'react';
-import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { Button } from '../Button';
-import { Routes } from '../../constants';
+import { Endpoints, Routes } from '../../constants';
 
 import styles from './Header.module.scss';
+import { UserAction, UserContext } from '../../store';
+import { useAxios } from '../../hooks/useAxios';
 
-type Props = { hasSignedIn?: boolean };
-export const Header: FC<Props> = ({ hasSignedIn = false }) => {
+export const Header = () => {
+  const {
+    state: { isAuthenticated },
+    dispatch,
+  } = useContext(UserContext);
+
+  const navigate = useNavigate();
+  const { fetchData } = useAxios({});
+
+  const onSignOut = async () => {
+    await fetchData({ url: Endpoints.signOut, method: 'DELETE' });
+    dispatch({ type: UserAction.signOut });
+    navigate(Routes.signIn);
+  };
+
   return (
     <ul className={styles.container}>
       <li className={styles.item}>
@@ -15,16 +30,16 @@ export const Header: FC<Props> = ({ hasSignedIn = false }) => {
           <Button>About us</Button>
         </Link>
       </li>
-      {hasSignedIn && (
+      {isAuthenticated && (
         <li className={styles.item}>
           <Link to={Routes.profile}>
             <Button>Profile</Button>
           </Link>
         </li>
       )}
-      {hasSignedIn ? (
+      {isAuthenticated ? (
         <li className={styles.item}>
-          <Button>Sign out</Button>
+          <Button onClick={onSignOut}>Sign out</Button>
         </li>
       ) : (
         <li className={styles.item}>
