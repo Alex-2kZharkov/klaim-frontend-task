@@ -1,3 +1,4 @@
-# Install certificates to enable https locally
+# Running app locally
 - https://github.com/FiloSottile/mkcert#installation
-- Run `mkcert -install  `
+- Run `npm i`
+- Run `npm run dev`
