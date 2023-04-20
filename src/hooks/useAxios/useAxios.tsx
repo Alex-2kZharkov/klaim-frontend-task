@@ -1,8 +1,11 @@
 import axios, { AxiosRequestConfig } from 'axios';
-
-import { useEffect, useState } from 'react';
-import { ResponseDto, Response, Optional } from '../../types';
+import { useContext, useEffect, useState } from 'react';
 import { message } from 'antd';
+import { useNavigate } from 'react-router-dom';
+
+import { ResponseDto, Response, Optional } from '../../types';
+import { Routes } from '../../constants';
+import { UserAction, UserContext } from '../../store';
 
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_HOST;
 axios.defaults.withCredentials = true; // to send httpOnly cookies automatically
@@ -16,6 +19,9 @@ export const useAxios = <T extends ResponseDto>({
 }: AxiosRequestConfig) => {
   const [response, setResponse] = useState({} as any); // TODO fix any
   const [isLoading, setIsLoading] = useState(true);
+
+  const navigate = useNavigate();
+  const { dispatch } = useContext(UserContext);
 
   const fetchData = async ({
     url,
@@ -36,9 +42,14 @@ export const useAxios = <T extends ResponseDto>({
       setResponse(response.data);
       return response.data;
     } catch (error: any) {
-      message.error(
-        error?.message ?? error?.response?.data?.data?.message ?? `Error while fetching ${url}`,
-      );
+      if (error?.response?.status === 403) {
+        dispatch({ type: UserAction.signOut, payload: { isAuthenticated: false } });
+        navigate(Routes.signIn);
+      } else {
+        message.error(
+          error?.message ?? error?.response?.data?.data?.message ?? `Error while fetching ${url}`,
+        );
+      }
     } finally {
       setIsLoading(false);
     }
