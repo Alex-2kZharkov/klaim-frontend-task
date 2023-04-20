@@ -3,13 +3,17 @@ import { Reducer } from 'react';
 import { UserActionTypes, UserState } from './user.types';
 import { UserAction } from './user.actions';
 
-export const initialState: UserState = { isAuthenticated: false };
+export const userInitialState: UserState = { isAuthenticated: false, user: null };
 
-export const userReducer: Reducer<UserState, UserActionTypes> = (state, action): UserState => {
+export const userReducer: Reducer<UserState, UserActionTypes> = (
+  state,
+  { type, payload },
+): UserState => {
   const reducer = {
-    [UserAction.signIn]: { isAuthenticated: true },
-    [UserAction.signOut]: { isAuthenticated: false },
+    [UserAction.signIn]: { isAuthenticated: true, user: null },
+    [UserAction.setUser]: { ...state, ...payload },
+    [UserAction.signOut]: { ...userInitialState },
   };
 
-  return reducer[action.type] ?? state;
+  return reducer[type] ?? state;
 };

@@ -1,11 +1,16 @@
 import { Spin } from 'antd';
+import { SpinSize } from 'antd/es/spin';
 
 import styles from './Loader.module.scss';
 
-export const Loader = () => {
+type Props = {
+  size?: SpinSize;
+};
+
+export const Loader = ({ size = 'large' }: Props) => {
   return (
     <div className={styles.container}>
-      <Spin size="large" />
+      <Spin size={size} />
     </div>
   );
 };

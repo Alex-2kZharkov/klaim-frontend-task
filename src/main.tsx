@@ -1,13 +1,16 @@
-import { StrictMode } from 'react';
+import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 
 import { App } from './features/App';
 import { UserProvider } from './store';
+import { QuoteProvider } from './store';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>
     <UserProvider>
-      <App />
+      <QuoteProvider>
+        <App />
+      </QuoteProvider>
     </UserProvider>
   </StrictMode>,
 );

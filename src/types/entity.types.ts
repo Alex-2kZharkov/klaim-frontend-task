@@ -11,7 +11,7 @@ export type LoginDto = {
   password: string;
 };
 
-export type RegisterUserDto = LoginDto & {
+export type UserProfileDto = Pick<LoginDto, 'email'> & {
   fullname: string;
 };
 
