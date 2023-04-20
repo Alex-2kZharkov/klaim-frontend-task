@@ -1,0 +1,16 @@
+@import "src/styles/variables.module";
+
+.form {
+  display: flex;
+  flex-direction: column;
+
+  div {
+    display: block;
+    margin: 0;
+  }
+
+  > div:not(:first-child) {
+    margin-top: 14px;
+  }
+
+}

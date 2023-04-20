@@ -1,9 +1,11 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
 import { useEffect, useState } from 'react';
-import { ResponseDto, Response } from '../../types';
+import { ResponseDto, Response, Optional } from '../../types';
+import { message } from 'antd';
 
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_HOST;
+axios.defaults.withCredentials = true; // to send httpOnly cookies automatically
 
 export const useAxios = <T extends ResponseDto>({
   url,
@@ -15,21 +17,34 @@ export const useAxios = <T extends ResponseDto>({
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchData = async () => {
+  const fetchData = async ({
+    url,
+    method,
+    data,
+    cancelToken,
+  }: AxiosRequestConfig): Promise<Optional<Response<T>>> => {
     try {
-      const result = await axios.request<Response<T>>({ url, method, data, cancelToken });
-      setResponse(result.data);
+      const response = await axios.request<Response<T>>({ url, method, data, cancelToken });
+      setResponse(response.data);
+      return response.data;
     } catch (error: any) {
-      console.log(error, '============================');
       setError(error?.message ?? `Error while fetching ${url}`);
+      message.error(error?.response?.data?.data?.message);
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchData();
-  }, []); // execute once only
+    if (url && method) {
+      fetchData({
+        url,
+        method,
+        data,
+        cancelToken,
+      });
+    }
+  }, []);
 
-  return { data: response.data, error, isLoading, setResponse };
+  return { data: response.data, error, isLoading, fetchData };
 };

@@ -1,5 +1,5 @@
-export const ROUTES = {
+export const Routes = {
   default: '/',
-  profile: '/profile/:profileId',
+  profile: '/profile',
   signIn: '/sign-in',
 } as const;
