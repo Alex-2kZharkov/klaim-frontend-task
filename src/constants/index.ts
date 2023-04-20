@@ -1,2 +1,2 @@
 export * from './route.constants';
-export * from './endpoints.constants';
+export * from './endpoint.constants';

@@ -1,4 +1,11 @@
-import { AuthorDto, CompanyDto, LoginDto, QuoteDto, RegisterUserDto } from './entity.types';
+import {
+  AuthorDto,
+  CompanyDto,
+  LoginDto,
+  QuoteDto,
+  RegisterUserDto,
+  TokenDto,
+} from './entity.types';
 
 export type Response<T> = {
   success: boolean;
@@ -9,4 +16,11 @@ export type ErrorDto = {
   message: string;
 };
 
-export type ResponseDto = CompanyDto | LoginDto | RegisterUserDto | AuthorDto | QuoteDto | ErrorDto;
+export type ResponseDto =
+  | CompanyDto
+  | TokenDto
+  | LoginDto
+  | RegisterUserDto
+  | AuthorDto
+  | QuoteDto
+  | ErrorDto;

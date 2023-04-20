@@ -2,6 +2,10 @@ export type CompanyDto = {
   info: string;
 };
 
+export type TokenDto = {
+  token: string;
+};
+
 export type LoginDto = {
   email: string;
   password: string;

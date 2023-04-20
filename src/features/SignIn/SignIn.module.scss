@@ -1,0 +1,17 @@
+@import "src/styles/variables.module";
+
+.form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 24px;
+
+  div {
+    display: block;
+    margin: 0;
+  }
+
+  > div {
+    margin-top: 14px;
+  }
+
+}
