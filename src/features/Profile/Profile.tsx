@@ -17,12 +17,12 @@ import { RequestQuoteModal } from './components/RequestQuoteModal';
 import styles from './Profile.module.scss';
 
 export const Profile = () => {
-  const { dispatch: userDispatch } = useContext(UserContext);
   const { data: userProfile, isLoading } = useAxios<UserProfileDto>({
     method: 'GET',
     url: Endpoints.profile,
   });
 
+  const { dispatch: userDispatch } = useContext(UserContext);
   const {
     state: { author, quote },
     dispatch: quoteDispatch,
@@ -41,7 +41,7 @@ export const Profile = () => {
     setIsModalOpen(prevState => !prevState);
   };
 
-  const onUpdateClick = async () => {
+  const onUpdateClick = () => {
     onModalVisibilityChange();
   };
 
