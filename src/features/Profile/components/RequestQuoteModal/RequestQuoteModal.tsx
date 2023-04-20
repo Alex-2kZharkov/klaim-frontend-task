@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Modal, Row } from 'antd';
 
 import { Button } from '../../../../components/Button';
@@ -20,13 +20,26 @@ export const RequestQuoteModal = ({ isModalOpen, onModalVisibilityChange }: Prop
   const { isLoading: isAuthorLoading, fetchData: fetchAuthor } = useAxios<AuthorDto>({});
   const { isLoading: isQuoteLoading, fetchData: fetchQuote } = useAxios<QuoteDto>({});
 
+  const [abortController, setAbortController] = useState(new AbortController());
+
+  const onCancel = () => {
+    abortController.abort();
+    setAbortController(new AbortController());
+    onModalVisibilityChange();
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      const author = await fetchAuthor({ method: 'GET', url: Endpoints.author });
+      const author = await fetchAuthor({
+        method: 'GET',
+        url: Endpoints.author,
+        signal: abortController.signal,
+      });
       const quote = await fetchQuote({
         method: 'GET',
         url: Endpoints.quote,
         params: { authorId: author?.data?.authorId },
+        signal: abortController.signal,
       });
       dispatch({
         type: QuoteAction.fetchData,
@@ -47,7 +60,7 @@ export const RequestQuoteModal = ({ isModalOpen, onModalVisibilityChange }: Prop
       onCancel={onModalVisibilityChange}
       footer={[
         <Row className={styles.modalFooter}>
-          <Button type="primary" key="back" onClick={onModalVisibilityChange}>
+          <Button type="primary" key="back" onClick={onCancel}>
             Cancel
           </Button>
         </Row>,

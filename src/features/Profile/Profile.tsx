@@ -22,7 +22,7 @@ export const Profile = () => {
     dispatch,
   } = useContext(QuoteContext);
 
-  const { data: userProfileData } = useAxios<UserProfileDto>({
+  const { data: userProfileData, isLoading } = useAxios<UserProfileDto>({
     method: 'GET',
     url: Endpoints.profile,
   });
@@ -58,7 +58,7 @@ export const Profile = () => {
         </Col>
         <Col className={styles.content}>
           <Title className={styles.title} level={2}>
-            Welcome, {firstName}!
+            Welcome, {isLoading ? '...' : `${firstName}!`}
           </Title>
           <Button onClick={onUpdateClick} type="primary">
             Update

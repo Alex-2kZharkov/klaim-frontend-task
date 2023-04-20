@@ -11,28 +11,34 @@ export const useAxios = <T extends ResponseDto>({
   url,
   method,
   data,
-  cancelToken,
+  signal,
   params,
 }: AxiosRequestConfig) => {
   const [response, setResponse] = useState({} as any); // TODO fix any
-  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchData = async ({
     url,
     method,
     data,
-    cancelToken,
+    signal,
     params,
   }: AxiosRequestConfig): Promise<Optional<Response<T>>> => {
     try {
       setIsLoading(true);
-      const response = await axios.request<Response<T>>({ url, method, data, cancelToken, params });
+      const response = await axios.request<Response<T>>({
+        url,
+        method,
+        data,
+        signal,
+        params,
+      });
       setResponse(response.data);
       return response.data;
     } catch (error: any) {
-      setError(error?.message ?? `Error while fetching ${url}`);
-      message.error(error?.response?.data?.data?.message);
+      message.error(
+        error?.message ?? error?.response?.data?.data?.message ?? `Error while fetching ${url}`,
+      );
     } finally {
       setIsLoading(false);
     }
@@ -44,11 +50,11 @@ export const useAxios = <T extends ResponseDto>({
         url,
         method,
         data,
-        cancelToken,
+        signal,
         params,
       });
     }
   }, []);
 
-  return { data: response.data, error, isLoading, fetchData };
+  return { data: response.data, isLoading, fetchData };
 };
